@@ -1,0 +1,149 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    margin: 0;
+    padding: 1rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+}
+
+header p {
+    color: #6b7280;
+}
+
+.controls {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+}
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-success {
+    background-color: #22c55e;
+}
+.btn-success:hover {
+    background-color: #16a34a;
+}
+
+#allocation-board {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 1.5rem;
+}
+
+#assigned-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 1.5rem;
+}
+
+/* --- Columns & Items --- */
+.column {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.column-header {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+}
+#unassigned-list-count, #unassigned-list-people-count {
+    color: #4b5563;
+}
+
+.list-group {
+    padding: 1rem;
+    min-height: 150px;
+    flex-grow: 1;
+}
+
+.list-group-item {
+    background-color: white;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
+    border: 2px solid transparent;
+}
+
+.list-group-item p {
+    margin: 0;
+    padding: 0.1rem 0;
+}
+
+.list-group-item.selected {
+    background-color: #dbeafe;
+    border-color: #60a5fa;
+}
+
+.list-group-item.dragging {
+    opacity: 0.5;
+}
+
+.placeholder {
+    background-color: #e0eaf5;
+    border: 2px dashed #a0b3c7;
+    border-radius: 0.5rem;
+    height: 50px;
+    margin-bottom: 0.75rem;
+}
+
+/* --- Message Box --- */
+#message-box {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    color: white;
+    z-index: 100;
+}

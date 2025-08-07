@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Allocator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+        <div class="container">
+        <header>
+            <h1>Transport Allocation Manager</h1>
+            <p>Click to select multiple items. Drag a selected item to move the group.</p>
+        </header>
+
+        <div class="controls">
+            <label for="csv-file" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L6.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+                Upload CSV
+            </label>
+            <input type="file" id="csv-file" accept=".csv" class="hidden">
+            <span id="file-name">No file chosen</span>
+            
+            <button id="generate-xlsx" class="btn btn-success">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
+                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" />
+                </svg>
+                Generate Allocations
+            </button>
+        </div>
+        
+        <div id="message-box" class="hidden">
+            <p id="message-text"></p>
+        </div>
+
+        <div id="allocation-board">
+            <div class="column">
+                <div class="column-header">
+                    <h2>Unassigned People</h2>
+                    <p id="unassigned-list-count">Requests: 0</p>
+                    <p id="unassigned-list-people-count">Total People: 0</p>
+                </div>
+                <div id="unassigned-list" class="list-group">
+                </div>
+            </div>
+
+            <div id="assigned-columns">
+            </div>
+        </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>
