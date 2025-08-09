@@ -18,10 +18,20 @@ function initializeApp() {
         'Special Taxi Load 1', 'Special Taxi Load 2', 'Special Taxi Load 3'
     ];
 
-    // Define the new priority column name for easy reference
     const priorityColumn = "If you're doing the membership process, are you coming to the class at 8:30 AM this Sunday?";
     
     // --- UI Initialization ---
+    // Unassigned Column Header
+    const unassignedHeader = unassignedList.previousElementSibling;
+    const unassignedFilterControls = document.createElement('div');
+    unassignedFilterControls.className = 'filter-controls';
+    unassignedFilterControls.innerHTML = `
+        <input type="text" class="location-filter" placeholder="Filter by location...">
+        <button class="priority-filter-btn">Discipleship Class</button>
+    `;
+    unassignedHeader.appendChild(unassignedFilterControls);
+    
+    // Assigned Column Headers
     loadNames.forEach(name => {
         const columnId = name.toLowerCase().replace(/\s+/g, '-');
         const columnHTML = `
@@ -30,6 +40,10 @@ function initializeApp() {
                     <h3 style="color: #3730a3;">${name}</h3>
                     <p id="${columnId}-count" style="color: #4338ca;">Requests: 0</p>
                     <p id="${columnId}-people-count" style="color: #4338ca; font-weight: 500;">Total People: 0</p>
+                    <div class="filter-controls">
+                        <input type="text" class="location-filter" placeholder="Filter by location...">
+                        <button class="priority-filter-btn">Discipleship Class</button>
+                    </div>
                 </div>
                 <div id="${columnId}" class="list-group"></div>
             </div>
@@ -37,21 +51,28 @@ function initializeApp() {
         assignedColumnsContainer.innerHTML += columnHTML;
     });
 
-    // --- Native Drag and Drop & Selection Logic ---
-
-    // Use event delegation for all interactions
-    allocationBoard.addEventListener('click', handleItemClick);
+    // --- Event Delegation Setup ---
+    allocationBoard.addEventListener('click', handleBoardClick);
+    allocationBoard.addEventListener('input', handleBoardInput);
     allocationBoard.addEventListener('dragstart', handleDragStart);
     allocationBoard.addEventListener('dragend', handleDragEnd);
     allocationBoard.addEventListener('dragover', handleDragOver);
     allocationBoard.addEventListener('dragleave', handleDragLeave);
     allocationBoard.addEventListener('drop', handleDrop);
 
-    function handleItemClick(e) {
-        const clickedItem = e.target.closest('.list-group-item');
-        if (!clickedItem) return;
-        // A simple click now only toggles the 'selected' class.
-        clickedItem.classList.toggle('selected');
+    function handleBoardClick(e) {
+        if (e.target.classList.contains('priority-filter-btn')) {
+            e.target.classList.toggle('active');
+            applyFiltersForColumn(e.target.closest('.column'));
+        } else if (e.target.closest('.list-group-item')) {
+            e.target.closest('.list-group-item').classList.toggle('selected');
+        }
+    }
+
+    function handleBoardInput(e) {
+        if (e.target.classList.contains('location-filter')) {
+            applyFiltersForColumn(e.target.closest('.column'));
+        }
     }
     
     function handleDragStart(e) {
@@ -69,7 +90,7 @@ function initializeApp() {
         e.dataTransfer.effectAllowed = 'move';
     }
 
-    function handleDragEnd(e) {
+    function handleDragEnd() {
         document.querySelectorAll('.dragging').forEach(item => item.classList.remove('dragging'));
     }
 
@@ -104,7 +125,7 @@ function initializeApp() {
         }
     }
     
-    // --- Helper Functions for Drag & Drop ---
+    // --- Helper Functions ---
     
     function moveSelectedItems(targetList, beforeElement) {
         const selected = document.querySelectorAll('.list-group-item.selected');
@@ -112,11 +133,12 @@ function initializeApp() {
             targetList.insertBefore(item, beforeElement);
             item.classList.remove('selected');
         });
+        applyAllFilters();
         updateAllCounts();
     }
 
     function getDragAfterElement(container, y) {
-        const draggableElements = [...container.querySelectorAll('.list-group-item:not(.dragging)')];
+        const draggableElements = [...container.querySelectorAll('.list-group-item:not(.dragging):not([style*="display: none"])')];
         return draggableElements.reduce((closest, child) => {
             const box = child.getBoundingClientRect();
             const offset = y - box.top - box.height / 2;
@@ -137,6 +159,28 @@ function initializeApp() {
         }
     }
 
+    function applyFiltersForColumn(column) {
+        if (!column) return;
+        const locationFilter = column.querySelector('.location-filter').value.toLowerCase();
+        const priorityButton = column.querySelector('.priority-filter-btn');
+        const priorityOnly = priorityButton.classList.contains('active');
+
+        const items = column.querySelectorAll('.list-group-item');
+        items.forEach(item => {
+            const locationMatch = item.dataset.location.toLowerCase().includes(locationFilter);
+            const priorityMatch = !priorityOnly || item.classList.contains('priority-item');
+
+            if (locationMatch && priorityMatch) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function applyAllFilters() {
+        document.querySelectorAll('.column').forEach(applyFiltersForColumn);
+    }
 
     // --- Event Listeners for Controls ---
     fileInput.addEventListener('change', (event) => {
@@ -190,7 +234,6 @@ function initializeApp() {
         item.dataset.people = numPeople;
         item.draggable = true;
 
-        // Check for priority status and add the highlight class
         if (person[priorityColumn] === 'Yes') {
             item.classList.add('priority-item');
         }
@@ -257,7 +300,7 @@ function initializeApp() {
     }
 
     function updateAllCounts() {
-        document.querySelectorAll('.list-group').forEach(updateColumnCounts);
+        document.querySelectorAll('.column').forEach(col => updateColumnCounts(col.querySelector('.list-group')));
     }
     
     function showToast(message, isError = false) {

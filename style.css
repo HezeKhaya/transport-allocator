@@ -158,3 +158,66 @@ header p {
     background-color: #fde68a; /* A richer yellow */
     border-color: #f59e0b;
 }
+
+/* --- Filter Controls --- */
+.filter-controls {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.location-filter {
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn't add to width */
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+}
+
+.priority-filter-btn {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: #f9fafb;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    font-size: 0.875rem;
+}
+
+/* --- Filter Controls --- */
+.filter-controls {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.location-filter {
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn't add to width */
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+}
+
+.priority-filter-btn {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: #f9fafb;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    font-size: 0.875rem;
+}
+
+.priority-filter-btn.active {
+    background-color: #fef9c3; /* Same as priority item highlight */
+    border-color: #f59e0b;
+    color: #92400e;
+    font-weight: 600;
+}
