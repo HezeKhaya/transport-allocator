@@ -147,3 +147,14 @@ header p {
     color: white;
     z-index: 100;
 }
+
+/* --- Priority Item Highlighting --- */
+.priority-item {
+    background-color: #fef9c3; /* A light yellow */
+}
+
+/* Make selected priority items stand out too */
+.priority-item.selected {
+    background-color: #fde68a; /* A richer yellow */
+    border-color: #f59e0b;
+}

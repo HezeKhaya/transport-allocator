@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function initializeApp() {
+    // --- Element References ---
     const fileInput = document.getElementById('csv-file');
     const fileNameSpan = document.getElementById('file-name');
     const unassignedList = document.getElementById('unassigned-list');
@@ -16,6 +17,9 @@ function initializeApp() {
         'Church Bus Load 1', 'Church Bus Load 2', 'Church Bus Load 3',
         'Special Taxi Load 1', 'Special Taxi Load 2', 'Special Taxi Load 3'
     ];
+
+    // Define the new priority column name for easy reference
+    const priorityColumn = "If you're doing the membership process, are you coming to the class at 8:30 AM this Sunday?";
     
     // --- UI Initialization ---
     loadNames.forEach(name => {
@@ -33,7 +37,9 @@ function initializeApp() {
         assignedColumnsContainer.innerHTML += columnHTML;
     });
 
+    // --- Native Drag and Drop & Selection Logic ---
 
+    // Use event delegation for all interactions
     allocationBoard.addEventListener('click', handleItemClick);
     allocationBoard.addEventListener('dragstart', handleDragStart);
     allocationBoard.addEventListener('dragend', handleDragEnd);
@@ -97,7 +103,9 @@ function initializeApp() {
             removePlaceholder();
         }
     }
-        
+    
+    // --- Helper Functions for Drag & Drop ---
+    
     function moveSelectedItems(targetList, beforeElement) {
         const selected = document.querySelectorAll('.list-group-item.selected');
         selected.forEach(item => {
@@ -130,6 +138,7 @@ function initializeApp() {
     }
 
 
+    // --- Event Listeners for Controls ---
     fileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -142,16 +151,18 @@ function initializeApp() {
 
     generateButton.addEventListener('click', generateXlsxFile);
     
+    // --- Core Application Logic ---
     function parseCsvFile(file) {
         Papa.parse(file, {
             header: true,
             skipEmptyLines: true,
             complete: function(results) {
-                const requiredColumns = ['What is your name?', 'How many people are you requesting for?', 'Pickup point next to you?', 'Other (Please Specify)'];
+                const requiredColumns = ['What is your name?', 'How many people are you requesting for?', 'Pickup point next to you?', 'Other (Please Specify)', priorityColumn];
                 const hasRequiredColumns = requiredColumns.every(col => results.meta.fields.includes(col));
 
                 if (!results.data.length || !hasRequiredColumns) {
-                    showToast(`Error: CSV must contain '${requiredColumns.join("', '")}' columns.`, true);
+                    const missingColumn = requiredColumns.find(col => !results.meta.fields.includes(col)) || "a required column";
+                    showToast(`Error: CSV is missing the column: "${missingColumn}"`, true);
                     return;
                 }
                 processAndDisplayData(results.data);
@@ -178,6 +189,11 @@ function initializeApp() {
         item.dataset.location = location;
         item.dataset.people = numPeople;
         item.draggable = true;
+
+        // Check for priority status and add the highlight class
+        if (person[priorityColumn] === 'Yes') {
+            item.classList.add('priority-item');
+        }
 
         item.innerHTML = `
             <p style="font-weight: 600;">${name}</p>
